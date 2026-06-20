@@ -85,6 +85,9 @@
   input.t,select.t,textarea.t{width:100%;font:inherit;font-size:16px;padding:11px 13px;
        border:1.5px solid var(--line);border-radius:10px;background:#fff;}
   textarea.t{min-height:90px;resize:vertical;}
+  .t.bad{border-color:var(--danger);background:#fff6f5;}
+  .formErr{background:#fff6f5;border:1px solid #f2c8c2;color:#a02418;border-radius:8px;
+           padding:10px 14px;font-size:14px;font-weight:700;margin-top:14px;}
   .chips{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0;}
   .chip{padding:9px 16px;border:2px solid var(--line);border-radius:999px;font-weight:700;font-size:15px;
         cursor:pointer;background:#fff;}
@@ -207,30 +210,41 @@
         <div class="chip" onclick="pick(this)">性騷擾</div>
         <div class="chip" onclick="pick(this)">其他職場不法侵害</div>
       </div>
-      <div class="hint">選「性騷擾」時，本案後段將依《性別平等工作法》專屬流程處理（結案時限 2 個月、雙通報主管機關）。</div>
+      <div class="hint">本平台受理職場霸凌、性騷擾及其他職場不法侵害案件。案件受理後，將依案件類型適用之法令及公司相關辦法辦理調查、保密、保護與改善措施；涉及法定通報事項者，將依法辦理通報程序。</div>
 
       <div class="grid2">
-        <div><label class="f">姓名 <span class="req">*</span></label><input class="t" placeholder="王小明"></div>
-        <div><label class="f">部門 <span class="req">*</span></label><input class="t" placeholder="行銷部"></div>
-        <div><label class="f">Email <span class="req">*</span></label><input class="t" placeholder="name@starco.com"></div>
-        <div><label class="f">電話 <span class="req">*</span></label><input class="t" placeholder="09xx-xxx-xxx"></div>
+        <div><label class="f">姓名 <span class="req">*</span></label><input class="t need" placeholder="王小明"></div>
+        <div><label class="f">部門 <span class="req">*</span></label><input class="t need" placeholder="行銷部"></div>
+        <div><label class="f">Email <span class="req">*</span></label><input class="t need email" placeholder="name@starco.com"></div>
+        <div><label class="f">手機 <span class="req">*</span></label><input class="t need tel" placeholder="0912-345-678"></div>
       </div>
 
       <label class="f">被申訴人（可不填）</label>
       <input class="t" placeholder="用於迴避處理；不填不影響受理">
 
-      <label class="f">事件描述 <span class="req">*</span></label>
-      <textarea class="t" placeholder="發生時間、地點、經過、相關人、影響、您期待的協助"></textarea>
+      <h3 style="margin:18px 0 2px;">事件描述</h3>
+      <div class="grid2">
+        <div><label class="f">發生時間 <span class="req">*</span></label><input class="t need" placeholder="如：2026/5 起、每週一、約上個月"></div>
+        <div><label class="f">地點</label><input class="t" placeholder="選填"></div>
+      </div>
+      <label class="f">相關人 <span class="req">*</span></label>
+      <input class="t need" placeholder="涉及或在場的人；若無請填「無」">
+      <label class="f">經過 <span class="req">*</span></label>
+      <textarea class="t need" placeholder="經過、影響（發生了什麼、對您造成的影響）"></textarea>
+      <label class="f">期待的協助 <span class="req">*</span></label>
+      <textarea class="t need" placeholder="您希望公司如何協助或處理"></textarea>
 
       <div class="grid2">
         <div><label class="f">是否需要保護措施 <span class="req">*</span></label>
-          <select class="t"><option>請選擇</option><option>需要</option><option>不需要</option><option>不確定</option></select></div>
+          <select class="t need"><option value="">請選擇</option><option>需要</option><option>不需要</option><option>不確定</option></select></div>
         <div><label class="f">急迫性（初判）<span class="req">*</span></label>
-          <select class="t"><option>請選擇</option><option>高</option><option>中</option><option>低</option></select></div>
+          <select class="t need"><option value="">請選擇</option><option>高（24 小時內接案）</option><option>中（3 工作天內接案）</option><option>低（7 工作天內接案）</option></select></div>
       </div>
+      <div class="hint">「急迫性」決定 HR <b>多快接案</b>；<b>結案</b>另計：霸凌／性騷擾案約 <b>2 個月（最多 3 個月）</b>，一般案件較快。</div>
 
-      <div style="margin-top:22px;">
-        <button class="btn gold" onclick="submitReport()">送出申訴</button>
+      <div class="formErr" style="display:none;">⚠️ 請完成所有必填欄位（紅框處）；Email 與手機請填寫正確格式。</div>
+      <div style="margin-top:16px;">
+        <button class="btn gold" onclick="if(validate('reportBody'))submitReport()">送出申訴</button>
         <span class="muted" style="margin-left:12px;font-size:14px;">送出後將取得案件編號，HR 於 48 小時內完成受理。</span>
       </div>
     </div>
@@ -248,7 +262,7 @@
     <h1>一般服務／職場關懷</h1>
     <p class="sub">人事、出勤、薪酬、制度、主管溝通、身心關懷等。會保密處理；如為申訴請改用「提報申訴」。</p>
 
-    <div class="card">
+    <div class="card" id="genBody">
       <label class="f" style="margin-top:0;">您要反映的類型 <span class="req">*</span></label>
       <div class="chips">
         <div class="chip sel" onclick="genType(this,'svc')">一般服務</div>
@@ -257,7 +271,7 @@
 
       <div id="genSvc">
         <label class="f">一般服務—類別 <span class="req">*</span></label>
-        <select class="t"><option>請選擇</option><option>人事異動·到離職</option><option>出勤·假勤</option><option>薪酬·福利</option><option>制度·規章</option><option>教育訓練·OJT</option><option>招募·內推</option></select>
+        <select class="t need"><option value="">請選擇</option><option>人事異動·到離職</option><option>出勤·假勤</option><option>薪酬·福利</option><option>制度·規章</option><option>教育訓練·OJT</option><option>招募·內推</option></select>
       </div>
 
       <div id="genCare" style="display:none;">
@@ -274,25 +288,28 @@
       </div>
 
       <div class="grid2">
-        <div><label class="f">姓名 <span class="req">*</span></label><input class="t" placeholder="王小明"></div>
-        <div><label class="f">部門 <span class="req">*</span></label><input class="t" placeholder="行銷部"></div>
-        <div><label class="f">Email <span class="req">*</span></label><input class="t" placeholder="name@starco.com"></div>
-        <div><label class="f">電話／分機 <span class="req">*</span></label><input class="t" placeholder="分機 123"></div>
+        <div><label class="f">姓名 <span class="req">*</span></label><input class="t need" placeholder="王小明"></div>
+        <div><label class="f">部門 <span class="req">*</span></label><input class="t need" placeholder="行銷部"></div>
+        <div><label class="f">Email <span class="req">*</span></label><input class="t need email" placeholder="name@starco.com"></div>
+        <div><label class="f">手機 <span class="req">*</span></label><input class="t need tel" placeholder="0912-345-678"></div>
       </div>
 
       <label class="f">說明 <span class="req">*</span></label>
-      <textarea class="t" placeholder="發生時間、經過、影響、期待協助"></textarea>
+      <textarea class="t need" placeholder="您要反映的情形、經過與影響"></textarea>
+      <label class="f">期待的協助 <span class="req">*</span></label>
+      <textarea class="t need" placeholder="您希望公司如何協助或處理"></textarea>
 
       <div class="grid2">
         <div><label class="f">急迫性（初判）<span class="req">*</span></label>
-          <select class="t"><option>請選擇</option><option>高</option><option>中</option><option>低</option></select></div>
+          <select class="t need"><option value="">請選擇</option><option>高（24 小時內接案）</option><option>中（3 工作天內接案）</option><option>低（7 工作天內接案）</option></select></div>
         <div><label class="f">希望進行方式</label>
-          <select class="t"><option>文字處理皆可</option><option>晤談</option><option>僅文字</option></select></div>
+          <select class="t"><option>文字溝通</option><option>晤談</option></select></div>
       </div>
-      <div class="hint">選「晤談」可使用 <a href="#" onclick="alert('Google 日曆預約頁（HR 設定後貼上連結）');return false;">預約與 HR 晤談</a> 自助預約時段。</div>
+      <div class="hint">「急迫性」決定 HR 多快接案。選「晤談」可使用 <a href="#" onclick="alert('Google 日曆預約頁（HR 設定後貼上連結）');return false;">預約與 HR 晤談</a> 自助預約時段。</div>
 
+      <div class="formErr" style="display:none;">⚠️ 請完成所有必填欄位（紅框處）；Email 與手機請填寫正確格式。</div>
       <div style="margin-top:14px;">
-        <button class="btn gold" onclick="submitGeneral()">送出</button>
+        <button class="btn gold" onclick="if(validate('genBody'))submitGeneral()">送出</button>
         <span class="muted" style="margin-left:12px;font-size:14px;">送出後將取得案件編號，由 HR 處理並回覆。</span>
       </div>
     </div>
@@ -433,6 +450,24 @@
     document.getElementById('genCare').style.display = which==='care'?'block':'none';
   }
   function toggleChip(el){ el.classList.toggle('sel'); }
+  function validate(scopeId){
+    var scope=document.getElementById(scopeId);
+    var ok=true, firstBad=null;
+    scope.querySelectorAll('.need').forEach(function(el){
+      el.classList.remove('bad');
+      if(el.offsetParent===null) return;            // 跳過隱藏欄位（如未顯示的子題）
+      var v=(el.value||'').trim();
+      var bad=false;
+      if(!v) bad=true;
+      if(!bad && el.classList.contains('email') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) bad=true;
+      if(!bad && el.classList.contains('tel') && !/^09\d{8}$/.test(v.replace(/\D/g,''))) bad=true;
+      if(bad){ ok=false; el.classList.add('bad'); if(!firstBad) firstBad=el; }
+    });
+    var msg=scope.querySelector('.formErr');
+    if(msg) msg.style.display = ok?'none':'block';
+    if(!ok && firstBad) firstBad.scrollIntoView({behavior:'smooth',block:'center'});
+    return ok;
+  }
   function submitGeneral(){
     document.getElementById('genReceipt').style.display='block';
     document.getElementById('genReceipt').scrollIntoView({behavior:'smooth'});
