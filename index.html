@@ -212,8 +212,8 @@
           <div class="chip sel" onclick="recusal(this,false)">否</div>
         </div>
       </div>
-      <div id="recusalBox" class="hint" style="display:none;border-left-color:#c0392b;background:#fff6f5;margin:8px 0 0;">
-        因申訴對象為受理窗口或最高負責人，為確保公正與保密，請逕向 <b>當地勞工局</b> 提出申訴；本平台不在內部收件此類案件。
+      <div id="recusalBox" class="hint" style="display:none;margin:8px 0 0;">
+        因被申訴對象為受理窗口或最高負責人，本案<b>仍會受理</b>；為確保公正，調查可能改由<b>外部獨立顧問協助</b>進行。您也可<b>同時或改向當地勞工局</b>提出申訴。請繼續完成下方提報。
       </div>
     </div>
 
@@ -253,13 +253,9 @@
       <label class="f">期待的協助 <span class="req">*</span></label>
       <textarea class="t need" placeholder="您希望公司如何協助或處理"></textarea>
 
-      <div class="grid2">
-        <div><label class="f">是否需要保護措施 <span class="req">*</span></label>
-          <select class="t need"><option value="">請選擇</option><option>需要</option><option>不需要</option><option>不確定</option></select></div>
-        <div><label class="f">急迫性（初判）<span class="req">*</span></label>
-          <select class="t need"><option value="">請選擇</option><option>高（24 小時內接案）</option><option>中（3 工作天內接案）</option><option>低（7 工作天內接案）</option></select></div>
-      </div>
-      <div class="hint">「急迫性」決定 HR <b>多快接案</b>；<b>結案</b>另計：霸凌／性騷擾案約 <b>2 個月（最多 3 個月）</b>，一般案件較快。</div>
+      <label class="f">是否需要保護措施 <span class="req">*</span></label>
+      <select class="t need"><option value="">請選擇</option><option>需要</option><option>不需要</option><option>不確定</option></select>
+      <div class="hint">本案<b>結案期限依法為 2 個月（最多 3 個月）</b>；HR 將於 <b>48 小時內</b>完成受理確認。</div>
 
       <div id="shBlock" style="display:none;border-top:1px dashed var(--line);margin-top:14px;padding-top:6px;">
         <label class="f">（性騷擾案適用）希望採取的措施（可複選）</label>
@@ -483,8 +479,7 @@
     el.parentNode.querySelectorAll('.chip').forEach(function(c){c.classList.remove('sel');});
     el.classList.add('sel');
     document.getElementById('recusalBox').style.display = isYes?'block':'none';
-    document.getElementById('reportBody').style.opacity = isYes?'.4':'1';
-    document.getElementById('reportBody').style.pointerEvents = isYes?'none':'auto';
+    // 迴避＝是 仍要受理（不鎖表單）；調查改由外部顧問協助，並可指引勞工局
   }
   function submitReport(){
     document.getElementById('receiptBox').style.display='block';
