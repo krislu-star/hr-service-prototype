@@ -233,8 +233,13 @@
         <div><label class="f">手機 <span class="req">*</span></label><input class="t need tel" placeholder="0912-345-678"></div>
       </div>
 
-      <label class="f">被申訴人（可不填）</label>
-      <input class="t" placeholder="用於迴避處理；不填不影響受理">
+      <div class="grid2">
+        <div><label class="f">身分 <span class="req">*</span></label>
+          <select class="t need"><option value="">請選擇</option><option>在職</option><option>離職</option></select>
+          <span class="muted" style="font-size:13px;">離職者 HR 將以 Email 確認身分。</span></div>
+        <div><label class="f">被申訴人（可不填）</label>
+          <input class="t" placeholder="用於迴避處理；不填不影響受理"></div>
+      </div>
 
       <h3 style="margin:18px 0 2px;">事件描述</h3>
       <div class="grid2">
@@ -255,6 +260,19 @@
           <select class="t need"><option value="">請選擇</option><option>高（24 小時內接案）</option><option>中（3 工作天內接案）</option><option>低（7 工作天內接案）</option></select></div>
       </div>
       <div class="hint">「急迫性」決定 HR <b>多快接案</b>；<b>結案</b>另計：霸凌／性騷擾案約 <b>2 個月（最多 3 個月）</b>，一般案件較快。</div>
+
+      <div id="shBlock" style="display:none;border-top:1px dashed var(--line);margin-top:14px;padding-top:6px;">
+        <label class="f">（性騷擾案適用）希望採取的措施（可複選）</label>
+        <div class="chips">
+          <div class="chip" onclick="toggleChip(this)">隔離當事人</div>
+          <div class="chip" onclick="toggleChip(this)">提供或轉介諮商</div>
+          <div class="chip" onclick="toggleChip(this)">調整職務或工時</div>
+          <div class="chip" onclick="toggleChip(this)">儘速啟動調查</div>
+        </div>
+        <label class="f">（性騷擾案適用）是否同意進行協調？</label>
+        <select class="t"><option value="">請選擇</option><option>同意</option><option>不同意</option><option>再討論</option></select>
+        <div class="hint">協調須出於雙方自願；不同意不影響案件受理與調查。</div>
+      </div>
 
       <div class="formErr" style="display:none;">⚠️ 請完成所有必填欄位（紅框處）；Email 與手機請填寫正確格式。</div>
       <div style="margin-top:16px;">
@@ -456,6 +474,8 @@
   function pick(el){
     el.parentNode.querySelectorAll('.chip').forEach(function(c){c.classList.remove('sel');});
     el.classList.add('sel');
+    var sh=document.getElementById('shBlock');               // 性騷擾案才顯示性平法專屬欄位
+    if(sh) sh.style.display = (el.textContent.trim()==='性騷擾')?'block':'none';
   }
   function recusal(el,isYes){
     el.parentNode.querySelectorAll('.chip').forEach(function(c){c.classList.remove('sel');});
