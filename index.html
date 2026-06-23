@@ -339,10 +339,10 @@
         <div><label class="f">急迫性（初判）<span class="req">*</span></label>
           <select class="t need"><option value="">請選擇</option><option>高（24 小時內接案）</option><option>中（3 工作天內接案）</option><option>低（7 工作天內接案）</option></select></div>
         <div><label class="f">希望進行方式</label>
-          <select class="t"><option>文字溝通</option><option>晤談</option></select></div>
+          <select class="t" id="genMethod" onchange="toggleBooking()"><option>文字溝通</option><option>晤談</option></select></div>
       </div>
-      <div class="hint">「急迫性」決定 HR 多快接案。選「晤談」可用下方按鈕自助預約時段。</div>
-      <div style="margin-top:10px;"><a class="btn ghost sm" style="text-decoration:none;" href="https://calendar.app.google/2Wbtjb7e8bdUzmxR9" target="_blank" rel="noopener">🗓️ 預約與 HR 晤談時段</a></div>
+      <div class="hint">「急迫性」決定 HR 多快接案。選「晤談」後，下方會出現預約時段按鈕。</div>
+      <div id="bookingBox" style="display:none;margin-top:10px;"><a class="btn ghost sm" style="text-decoration:none;" href="https://calendar.app.google/2Wbtjb7e8bdUzmxR9" target="_blank" rel="noopener">🗓️ 預約與 HR 晤談時段</a></div>
 
       <div class="formErr" style="display:none;">⚠️ 請完成所有必填欄位（紅框處）；Email 與手機請填寫正確格式。</div>
       <div style="margin-top:14px;">
@@ -497,6 +497,11 @@
     document.getElementById('genCare').style.display = which==='care'?'block':'none';
   }
   function toggleChip(el){ el.classList.toggle('sel'); }
+  function toggleBooking(){                                   // 選「晤談」才顯示預約按鈕
+    var m=document.getElementById('genMethod'), box=document.getElementById('bookingBox');
+    if(m&&box) box.style.display=(m.value==='晤談')?'block':'none';
+  }
+  toggleBooking();
   function validate(scopeId){
     var scope=document.getElementById(scopeId);
     var ok=true, firstBad=null;
