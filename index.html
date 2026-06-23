@@ -133,9 +133,9 @@
     <div class="brand">HR Service Desk<span class="dot">.</span><small>STARCO 人資服務台</small></div>
     <div class="navbtns">
       <button data-v="home" class="active">員工首頁</button>
-      <button data-v="general">一般服務</button>
-      <button data-v="report">提報申訴</button>
-      <button data-v="track">進度查詢</button>
+      <button data-v="general">諮詢協助</button>
+      <button data-v="report">事件提報</button>
+      <button data-v="track">案件進度</button>
       <button data-v="hr">HR 後台</button>
     </div>
   </div>
@@ -153,23 +153,23 @@
     <div class="grid2">
       <div class="entry" onclick="go('general')">
         <div class="ic">💬</div>
-        <div><h3>一般服務／職場關懷 →</h3>
-        <p>人事、出勤、薪酬、制度、主管溝通、身心關懷等。</p></div>
+        <div><h3>諮詢協助／職場關懷 →</h3>
+        <p>人資制度、出勤、薪酬、主管溝通、身心關懷等諮詢；不確定算不算事件也先來這。</p></div>
       </div>
       <div class="entry" onclick="go('report')">
         <div class="ic">📝</div>
-        <div><h3>我要申訴 →</h3>
-        <p>疑似職場霸凌、性騷擾或其他不法侵害。受限收件、僅 HR 窗口可見。</p></div>
+        <div><h3>事件提報 →</h3>
+        <p>已確定的職場霸凌、性騷擾或其他不法侵害。正式通報入口、受限收件。</p></div>
       </div>
       <div class="entry" onclick="go('track')">
         <div class="ic">🔎</div>
-        <div><h3>查詢我的案件進度 →</h3>
+        <div><h3>案件進度查詢 →</h3>
         <p>輸入案件編號 + Email，查看目前處理進度。</p></div>
       </div>
       <div class="entry" onclick="alert('Google 日曆預約頁（HR 設定後貼上連結）')">
         <div class="ic">🗓️</div>
         <div><h3>預約與 HR 晤談 →</h3>
-        <p>一般服務／職場關懷適用。申訴案由 HR 受理後安排保密晤談。</p></div>
+        <p>諮詢協助／職場關懷適用。事件提報案由 HR 受理後安排保密晤談。</p></div>
       </div>
     </div>
 
@@ -184,11 +184,25 @@
     </div>
   </div>
 
-  <!-- ════════ 提報申訴 ════════ -->
+  <!-- ════════ 事件提報 ════════ -->
   <div class="view" id="v-report">
-    <h1>提報申訴</h1>
-    <p class="sub">全程保密、僅限必要人員知悉、禁止任何報復。</p>
+    <h1>職場事件提報</h1>
+    <p class="sub">正式通報／申訴入口・全程保密、僅限必要人員知悉、禁止任何報復。</p>
 
+    <!-- 通報前確認 分流閘 -->
+    <div class="card" id="reportGate">
+      <h2 style="margin-top:0;">通報前確認</h2>
+      <p>本頁為<b>正式職場事件提報入口</b>，適用於您已明確希望公司正式受理、紀錄及處理之案件。可提報類型包含<b>職場霸凌、性騷擾及其他職場不法侵害</b>。</p>
+      <p>若您尚不確定事件是否構成上述情形，或目前僅希望先進行諮詢、關懷或溝通協助，請先透過「諮詢協助／職場關懷」提出，HR 將協助初步了解與分流。</p>
+      <div class="hint">案件資料將依公司規範及案件處理必要範圍內保密，並禁止任何形式之不當對待、威脅、報復或差別待遇。</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px;">
+        <button class="btn gold" onclick="confirmReport()">我已確認，開始事件提報 →</button>
+        <button class="btn ghost" onclick="go('general')">我尚不確定，前往職場關懷</button>
+      </div>
+    </div>
+
+    <!-- 確認後才展開的正式表單 -->
+    <div id="reportForm" style="display:none;">
     <div class="card">
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
         <b style="color:var(--navy);">迴避確認：</b>
@@ -252,39 +266,42 @@
     <div class="card" id="receiptBox" style="display:none;border-color:#bfe3cd;background:#f6fdf9;">
       <h2 style="color:var(--ok);">✓ 已收到您的申訴</h2>
       <p>案件編號 <b style="font-size:20px;color:var(--navy);">SC-2026-0042</b>　已寄送收據至您的 Email。</p>
-      <p class="muted">HR 將於 48 小時內完成受理確認。您可至「進度查詢」隨時查看狀態。全程保密、禁止報復。</p>
-      <button class="btn ghost sm" onclick="go('track')">前往進度查詢 →</button>
+      <p class="muted">HR 將於 48 小時內完成受理確認。您可至「案件進度」隨時查看狀態。全程保密、禁止報復。</p>
+      <button class="btn ghost sm" onclick="go('track')">前往案件進度 →</button>
     </div>
+    </div><!-- /reportForm -->
   </div>
 
-  <!-- ════════ 一般服務／職場關懷 ════════ -->
+  <!-- ════════ 諮詢協助／職場關懷 ════════ -->
   <div class="view" id="v-general">
-    <h1>一般服務／職場關懷</h1>
-    <p class="sub">人事、出勤、薪酬、制度、主管溝通、身心關懷等。會保密處理；如為申訴請改用「提報申訴」。</p>
+    <h1>諮詢協助／職場關懷</h1>
+    <p class="sub">人資制度、出勤、薪酬、主管溝通、職場互動、身心關懷等諮詢與協助。會保密處理；若要正式提報霸凌／性騷擾／不法侵害，請改用「事件提報」。</p>
 
     <div class="card" id="genBody">
-      <label class="f" style="margin-top:0;">您要反映的類型 <span class="req">*</span></label>
+      <label class="f" style="margin-top:0;">請選擇諮詢／協助類型 <span class="req">*</span></label>
       <div class="chips">
-        <div class="chip sel" onclick="genType(this,'svc')">一般服務</div>
-        <div class="chip" onclick="genType(this,'care')">一般職場關懷／溝通協助</div>
+        <div class="chip sel" onclick="genType(this,'svc')">人資制度／流程諮詢</div>
+        <div class="chip" onclick="genType(this,'care')">職場關懷／事件初步諮詢</div>
       </div>
 
       <div id="genSvc">
-        <label class="f">一般服務—類別 <span class="req">*</span></label>
+        <label class="f">諮詢類別 <span class="req">*</span></label>
         <select class="t need"><option value="">請選擇</option><option>人事異動·到離職</option><option>出勤·假勤</option><option>薪酬·福利</option><option>制度·規章</option><option>教育訓練·OJT</option><option>招募·內推</option></select>
       </div>
 
       <div id="genCare" style="display:none;">
-        <label class="f">一般職場關懷—項目（可複選）</label>
+        <label class="f">職場關懷項目（可複選）</label>
         <div class="chips">
-          <div class="chip" onclick="toggleChip(this)">工作適應·壓力</div>
-          <div class="chip" onclick="toggleChip(this)">主管溝通·同仁溝通</div>
-          <div class="chip" onclick="toggleChip(this)">團隊合作·跨部門</div>
-          <div class="chip" onclick="toggleChip(this)">職涯·職務調整</div>
-          <div class="chip" onclick="toggleChip(this)">家庭因素</div>
-          <div class="chip" onclick="toggleChip(this)">身心關懷</div>
+          <div class="chip" onclick="toggleChip(this)">工作適應／壓力支持</div>
+          <div class="chip" onclick="toggleChip(this)">主管溝通／管理互動</div>
+          <div class="chip" onclick="toggleChip(this)">同仁互動／團隊協作</div>
+          <div class="chip" onclick="toggleChip(this)">跨部門合作／溝通協調</div>
+          <div class="chip" onclick="toggleChip(this)">職務適應／職涯發展</div>
+          <div class="chip" onclick="toggleChip(this)">身心狀態／家庭照顧</div>
+          <div class="chip" onclick="toggleChip(this)">疑似不當對待／職場事件諮詢</div>
           <div class="chip" onclick="toggleChip(this)">其他</div>
         </div>
+        <div class="hint">若尚不確定情形是否涉及職場霸凌、性騷擾或職場不法侵害，可先於此提出，HR 將協助初步了解、分流與後續處理。</div>
       </div>
 
       <div class="grid2">
@@ -317,7 +334,7 @@
     <div class="card" id="genReceipt" style="display:none;border-color:#bfe3cd;background:#f6fdf9;">
       <h2 style="color:var(--ok);">✓ 已收到</h2>
       <p>案件編號 <b style="font-size:20px;color:var(--navy);">SC-2026-0043</b>　已寄送收據至您的 Email。案件將由 HR 處理，您會收到回覆。</p>
-      <button class="btn ghost sm" onclick="go('track')">前往進度查詢 →</button>
+      <button class="btn ghost sm" onclick="go('track')">前往案件進度 →</button>
     </div>
   </div>
 
@@ -423,7 +440,15 @@
     document.querySelectorAll('.navbtns button').forEach(function(b){
       b.classList.toggle('active', b.dataset.v===v);
     });
+    if(v==='report'){                                  // 每次進入事件提報，先回到通報前確認
+      document.getElementById('reportGate').style.display='block';
+      document.getElementById('reportForm').style.display='none';
+    }
     window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function confirmReport(){
+    document.getElementById('reportGate').style.display='none';
+    document.getElementById('reportForm').style.display='block';
   }
   document.querySelectorAll('.navbtns button').forEach(function(b){
     b.addEventListener('click',function(){go(b.dataset.v);});
