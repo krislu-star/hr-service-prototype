@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人資服務台 — 測試項目</title>
+<style>
+  :root{ --navy:#142356; --navy2:#21478C; --gold:#FFBF00; --tint:#eef0f7;
+         --ink:#1f2430; --muted:#5b647e; --line:#dde1ec; --danger:#c0392b; --ok:#1f7a4d; }
+  *{box-sizing:border-box;}
+  body{margin:0;zoom:1.3;font-family:"PingFang TC","Microsoft JhengHei","Noto Sans TC",system-ui,sans-serif;
+       color:var(--ink);background:#f4f5f9;line-height:1.65;font-size:18px;}
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px 90px;}
+  header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;
+         border-bottom:5px solid var(--gold);padding:24px 22px;}
+  header .inner{max-width:880px;margin:0 auto;}
+  header h1{margin:0;font-size:28px;font-weight:900;}
+  header p{margin:6px 0 0;color:#cdd5ef;font-size:15px;}
+
+  .bar{position:sticky;top:0;z-index:5;background:#fff;border:1px solid var(--line);
+       border-radius:0 0 12px 12px;padding:12px 18px;margin-bottom:14px;display:flex;
+       align-items:center;justify-content:space-between;gap:12px;box-shadow:0 4px 14px rgba(20,35,86,.06);flex-wrap:wrap;}
+  .bar .prog{font-weight:900;color:var(--navy);font-size:18px;}
+  .bar .track{flex:1;min-width:140px;height:12px;background:var(--tint);border-radius:999px;overflow:hidden;}
+  .bar .fill{height:100%;width:0;background:var(--gold);transition:width .25s;}
+  .bar button{font:inherit;font-size:14px;font-weight:700;border:2px solid var(--navy);background:#fff;
+              color:var(--navy);border-radius:999px;padding:5px 14px;cursor:pointer;}
+
+  .note{background:#fff6f5;border:1px solid #f2c8c2;border-left:6px solid var(--danger);
+        border-radius:10px;padding:11px 16px;color:#7a2018;font-size:14.5px;font-weight:600;margin-bottom:16px;}
+
+  h2{font-size:20px;font-weight:900;color:var(--navy);margin:24px 0 6px;padding-left:12px;border-left:6px solid var(--gold);}
+  .item{display:flex;gap:13px;align-items:flex-start;background:#fff;border:1px solid var(--line);
+        border-radius:11px;padding:13px 16px;margin:9px 0;cursor:pointer;transition:.12s;}
+  .item:hover{border-color:var(--navy2);}
+  .item.done{background:#f1faf4;border-color:#bfe3cd;}
+  .item input{appearance:none;-webkit-appearance:none;flex:0 0 auto;width:26px;height:26px;margin:1px 0 0;
+              border:2.5px solid var(--navy2);border-radius:7px;cursor:pointer;position:relative;background:#fff;}
+  .item input:checked{background:var(--ok);border-color:var(--ok);}
+  .item input:checked::after{content:"✓";position:absolute;color:#fff;font-weight:900;font-size:17px;left:4px;top:-2px;}
+  .item .b{flex:1;}
+  .item .b .n{font-weight:900;color:var(--navy2);margin-right:6px;}
+  .item .b h3{margin:0;font-size:17px;color:var(--navy);display:inline;}
+  .item .b p{margin:4px 0 0;color:#3a4258;font-size:15px;}
+  .item.done .b h3,.item.done .b .n{color:var(--ok);}
+  .key{display:inline-block;background:var(--gold);color:var(--navy);font-weight:800;font-size:12px;
+       padding:1px 9px;border-radius:999px;margin-left:6px;vertical-align:middle;}
+  .muted{color:var(--muted);font-size:13px;text-align:center;margin-top:26px;}
+</style>
+</head>
+<body>
+<header><div class="inner">
+  <h1>STARCO 人資服務台 — 測試項目</h1>
+  <p>重新部署後，照這張一條條測；發現問題請記下編號回報。</p>
+</div></header>
+
+<div class="wrap">
+  <div class="bar">
+    <span class="prog"><span id="cnt">0</span> / <span id="tot">0</span> 已完成</span>
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <button onclick="resetAll()">重設勾選</button>
+  </div>
+
+  <div class="note">⚠️ 勾選只存在你這台裝置的瀏覽器，不會和別人同步；重整不會消失，但換裝置／清快取會歸零。</div>
+
+  <h2>A. 登入 / 權限</h2>
+  <div id="A"></div>
+  <h2>B. 諮詢協助 送出</h2>
+  <div id="B"></div>
+  <h2>C. 事件提報 送出</h2>
+  <div id="C"></div>
+  <h2>D. 收信</h2>
+  <div id="D"></div>
+  <h2>E. HR 後台</h2>
+  <div id="E"></div>
+  <h2>F. 案件進度查詢（員工端）</h2>
+  <div id="F"></div>
+  <h2>G. 稽核</h2>
+  <div id="G"></div>
+
+  <p class="muted">STARCO 人資服務台 · 測試檢核表</p>
+</div>
+
+<script>
+  var ITEMS = {
+    A:[
+      ['1','用 HR 帳號開系統 → 要求登入 → 進得去 → 看得到「HR 後台」按鈕'],
+      ['2','用一個非 HR 的同事帳號開 → 看不到「HR 後台」按鈕'],
+      ['3','用非公司帳號 / 無痕未登入開 → 被擋在登入牆，進不去']
+    ],
+    B:[
+      ['4','人資制度／流程諮詢 → 選諮詢類別 → 填完送出 → 跳出案件編號收據'],
+      ['5','故意把 Email 填錯格式、手機填非 09 開頭 → 被擋下紅字，不會送出'],
+      ['6','職場關懷／事件初步諮詢 → 複選幾個項目 → 送出成功'],
+      ['7','開試算表「諮詢協助」分頁 → 有新的一列、欄位對得上','key']
+    ],
+    C:[
+      ['8','通報前確認選「我尚不確定」→ 被導去諮詢協助頁'],
+      ['9','選「我已確認」→ 迴避確認選「是」→ 出現外部管道提示、表單變灰鎖住'],
+      ['10','迴避選「否」→ 申訴類型點「性騷擾」→ 下方跳出性平法欄位（措施複選＋協調）→ 送出拿到編號'],
+      ['11','漏填某個必填欄位 → 紅框＋錯誤訊息'],
+      ['12','試算表「事件提報」分頁 → 新列裡「性騷措施／協調意願／迴避」欄有值','key']
+    ],
+    D:[
+      ['13','當事人填的信箱收到「收據信」（含案件編號）'],
+      ['14','HR 指定的通知信箱收到「新案通知」（只有編號＋類別、無當事人內容）','key']
+    ],
+    E:[
+      ['15','進 HR 後台 → 上方統計＋案件清單出現剛剛測的案'],
+      ['16','點案件 → 看到詳情（申訴案顯示完整內容）'],
+      ['17','按「受理／處理中」→ 狀態變；回試算表看「狀態／受理時間／結案期限」有更新','key'],
+      ['18','打字 →「寄送進度通知」→ 當事人收到進度信','key'],
+      ['19','按「結案」→ 狀態變已結案']
+    ],
+    F:[
+      ['20','用編號＋當初填的 Email → 查得到，狀態與時間軸正確'],
+      ['21','Email 故意填錯 → 查不到（保密：要對得上才給看）'],
+      ['22','查申訴案 → 只顯示簡化狀態、不露細節']
+    ],
+    G:[
+      ['23','試算表「稽核」分頁 → 建立案件、狀態變更、寄進度通知都有留痕']
+    ]
+  };
+  var KEY='hrdesk_test_v1';
+  var state=JSON.parse(localStorage.getItem(KEY)||'{}');
+  var total=0;
+  Object.keys(ITEMS).forEach(function(g){
+    var box=document.getElementById(g), html='';
+    ITEMS[g].forEach(function(it){
+      total++;
+      var id=it[0], txt=it[1], key=it[2]?'<span class="key">關鍵</span>':'';
+      var on=state[id]?'checked':'';
+      var cls=state[id]?'item done':'item';
+      html+='<label class="'+cls+'" id="it'+id+'"><input type="checkbox" data-id="'+id+'" '+on+'>'+
+            '<div class="b"><span class="n">'+id+'.</span><h3>'+txt+'</h3>'+key+'</div></label>';
+    });
+    box.innerHTML=html;
+  });
+  document.getElementById('tot').textContent=total;
+  function refresh(){
+    var done=Object.keys(state).filter(function(k){return state[k];}).length;
+    document.getElementById('cnt').textContent=done;
+    document.getElementById('fill').style.width=(total?Math.round(done/total*100):0)+'%';
+  }
+  document.querySelectorAll('input[type=checkbox]').forEach(function(cb){
+    cb.addEventListener('change',function(){
+      var id=cb.dataset.id;
+      state[id]=cb.checked;
+      localStorage.setItem(KEY,JSON.stringify(state));
+      document.getElementById('it'+id).classList.toggle('done',cb.checked);
+      refresh();
+    });
+  });
+  function resetAll(){
+    state={}; localStorage.removeItem(KEY);
+    document.querySelectorAll('input[type=checkbox]').forEach(function(cb){cb.checked=false;});
+    document.querySelectorAll('.item').forEach(function(i){i.classList.remove('done');});
+    refresh();
+  }
+  refresh();
+</script>
+</body>
+</html>
